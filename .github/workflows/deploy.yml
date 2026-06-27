@@ -4,29 +4,19 @@ on:
   push:
     branches:
       - main
-      - master
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
         node-version: '20'
-
-    - name: Install Clasp
-      run: npm install -g @google/clasp
-
-    - name: Configure Clasp Credentials
+    - run: npm install -g @google/clasp
+    - name: Configure Clasp
       run: |
         echo '${{ secrets.CLASPRC_JSON }}' > ~/.clasprc.json
-        sed -i 's/${SCRIPT_ID}/${{ secrets.SCRIPT_ID }}/g' .clasp.json
-
-    - name: Deploy Code
+    - name: Push Code
       run: clasp push --force
       
